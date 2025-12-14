@@ -1,66 +1,94 @@
-import { BookOpen, Image as ImageIcon } from 'lucide-react';
+import { BookOpen, Image as ImageIcon, X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ScannedJournal() {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   const journals = [
-    { id: 1, label: "journal-page-1.jpg" },
-    { id: 2, label: "journal-page-2.jpg" },
-    { id: 3, label: "journal-page-3.jpg" },
-    { id: 4, label: "journal-page-4.jpg" },
-    { id: 5, label: "journal-page-5.jpg" },
-    { id: 6, label: "journal-page-6.jpg" },
+    { id: 1, label: 'journal-page-1.jpg' },
+    { id: 2, label: 'journal-page-2.jpg' },
+    { id: 3, label: 'journal-page-3.jpg' },
+    { id: 4, label: 'journal-page-4.jpg' },
+    { id: 5, label: 'journal-page-5.jpg' },
+    { id: 6, label: 'journal-page-6.jpg' },
   ];
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="text-center mb-12">
-        <div className="inline-block">
+    <>
+      <div className="max-w-6xl mx-auto">
+        {/* HEADER */}
+        <div className="text-center mb-12">
           <h1 className="text-5xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent mb-4">
             Scanned Journal
           </h1>
-          <div className="h-1 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 rounded-full"></div>
+          <p className="text-xl text-gray-700 flex justify-center gap-2">
+            <BookOpen className="text-pink-500" />
+            My Personal Reflections & Notes
+          </p>
         </div>
-        <p className="text-xl text-gray-700 mt-6 flex items-center justify-center gap-2">
-          <BookOpen className="text-pink-500" size={24} />
-          <span>My Personal Reflections & Notes</span>
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {journals.map((journal) => (
-          <div
-            key={journal.id}
-            className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden border-2 border-pink-200 hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
-          >
-            <div className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 p-4">
-              <h3 className="text-xl font-semibold text-white flex items-center gap-2">
-                <BookOpen size={20} />
-                Journal Page {journal.id}
-              </h3>
-            </div>
+        {/* JOURNAL GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {journals.map((journal) => {
+            const imagePath = new URL(
+              `../images/${journal.label}`,
+              import.meta.url
+            ).href;
 
-            <div className="p-6">
-              <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl border-2 border-dashed border-pink-200 overflow-hidden">
-                <div className="aspect-[3/4] flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    <div className="text-6xl mb-4">📄</div>
-                    <p className="text-lg font-medium mb-1">{journal.label}</p>
-                    <p className="text-sm text-gray-400">Add your scanned journal page here</p>
-                  </div>
+            return (
+              <div
+                key={journal.id}
+                className="bg-white/90 rounded-2xl shadow-xl border-2 border-pink-200 hover:shadow-2xl transition"
+              >
+                <div className="bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 p-4">
+                  <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <BookOpen size={20} />
+                    Journal Page {journal.id}
+                  </h3>
+                </div>
+
+                <div className="p-6">
+                  <img
+                    src={imagePath}
+                    alt={`Journal Page ${journal.id}`}
+                    onClick={() => setSelectedImage(imagePath)}
+                    className="cursor-pointer w-full aspect-[3/4] object-cover rounded-xl border-2 border-pink-200 shadow-md hover:scale-105 transition-transform"
+                  />
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Click image to view full size
+                  </p>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
 
-      <div className="mt-12 p-6 bg-gradient-to-r from-pink-100 via-purple-100 to-blue-100 rounded-2xl border-2 border-pink-200 text-center">
-        <p className="text-gray-700 italic flex items-center justify-center gap-2 flex-wrap">
-          <ImageIcon className="text-purple-500" size={20} />
-          To add your journal scans, replace the placeholder images in the
-          <code className="bg-white px-2 py-1 rounded text-sm mx-2">public/images/journal</code>
-          folder with your scanned pages using the filenames shown above.
-        </p>
-      </div>
-    </div>
+      {/* FULL IMAGE MODAL */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div
+            className="relative max-w-5xl w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute -top-10 right-0 text-white hover:text-pink-400"
+              onClick={() => setSelectedImage(null)}
+            >
+              <X size={32} />
+            </button>
+
+            <img
+              src={selectedImage}
+              alt="Full journal page"
+              className="w-full max-h-[90vh] object-contain rounded-xl"
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
