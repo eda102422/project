@@ -88,6 +88,7 @@ export default function AboutMe() {
               </a>
             </div>
           </div>
+          
 
           <div className="mt-8 p-6 bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 rounded-2xl border-2 border-pink-100">
             <p className="text-gray-700 leading-relaxed text-center italic">

@@ -1,13 +1,20 @@
-import { User, MapPin, BookOpen, Award } from 'lucide-react';
+import { User, MapPin, BookOpen, Award, Sun, Moon } from 'lucide-react';
 
 type Page = 'about' | 'tour' | 'journal' | 'certifications';
 
 interface NavigationProps {
   currentPage: Page;
   onNavigate: (page: Page) => void;
+  darkMode: boolean;
+  setDarkMode: (value: boolean) => void;
 }
 
-export default function Navigation({ currentPage, onNavigate }: NavigationProps) {
+export default function Navigation({
+  currentPage,
+  onNavigate,
+  darkMode,
+  setDarkMode,
+}: NavigationProps) {
   const navItems = [
     { id: 'about' as Page, label: 'About Me', icon: User },
     { id: 'tour' as Page, label: 'Education Tour', icon: MapPin },
@@ -16,16 +23,20 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
   ];
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-pink-200">
+    <nav className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b-2 border-pink-200 dark:border-gray-700 transition-colors">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
+          {/* TITLE */}
           <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text text-transparent">
             Rho Jane Lazarraga
           </h1>
-          <div className="flex gap-2 flex-wrap">
+
+          {/* NAV + TOGGLE */}
+          <div className="flex items-center gap-2 flex-wrap">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentPage === item.id;
+
               return (
                 <button
                   key={item.id}
@@ -33,14 +44,18 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
                   className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
                     isActive
                       ? 'bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 text-white shadow-lg scale-105'
-                      : 'bg-white text-gray-700 hover:bg-pink-100 hover:scale-105'
+                      : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-pink-100 dark:hover:bg-gray-700 hover:scale-105'
                   }`}
                 >
                   <Icon size={18} />
-                  <span className="hidden sm:inline font-medium">{item.label}</span>
+                  <span className="hidden sm:inline font-medium">
+                    {item.label}
+                  </span>
                 </button>
               );
             })}
+
+      
           </div>
         </div>
       </div>
